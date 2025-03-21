@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Neue Inventarliste erstellen</h2>
+<form method="POST">
+  <div class="mb-3">
+    <label for="list_name">Listenname</label>
+    <input type="text" name="list_name" class="form-control" required>
+  </div>
+  <div id="fields">
+    <h5>Felder</h5>
+    <div class="row mb-2 field-entry">
+      <div class="col"><input name="field_name[]" type="text" class="form-control" placeholder="Feldname" required></div>
+      <div class="col">
+        <select name="field_type[]" class="form-control">
+          <option value="text">Text</option>
+          <option value="number">Zahl</option>
+          <option value="boolean">Ja/Nein</option>
+          <option value="image">Bild</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="btn btn-secondary btn-sm" onclick="addField()">+ Feld hinzufügen</button>
+  <button type="submit" class="btn btn-primary mt-3">Liste erstellen</button>
+</form>
+
+<script>
+  function addField() {
+    const container = document.getElementById("fields");
+    const entry = document.createElement("div");
+    entry.classList.add("row", "mb-2", "field-entry");
+    entry.innerHTML = `
+      <div class="col"><input name="field_name[]" type="text" class="form-control" placeholder="Feldname" required></div>
+      <div class="col">
+        <select name="field_type[]" class="form-control">
+          <option value="text">Text</option>
+          <option value="number">Zahl</option>
+          <option value="boolean">Ja/Nein</option>
+          <option value="image">Bild</option>
+        </select>
+      </div>`;
+    container.appendChild(entry);
+  }
+</script>
+{% endblock %}

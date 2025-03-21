@@ -3,5 +3,9 @@ Flask-WTF
 Flask-Login
 Flask-SQLAlchemy
 Flask-Migrate
+Flask-Bootstrap
 email-validator
 gunicorn
+python-dotenv
+pymysql
+cryptography

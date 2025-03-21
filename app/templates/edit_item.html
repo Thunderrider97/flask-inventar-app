@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Eintrag bearbeiten in "{{ inv_list.name }}"</h2>
+<form method="POST">
+    {% for field in inv_list.fields %}
+        <div class="mb-3">
+            <label class="form-label">{{ field.name }}</label>
+            {% set value = item.data[field.name] %}
+            {% if field.field_type == 'text' %}
+                <input type="text" name="{{ field.name }}" value="{{ value }}" class="form-control">
+            {% elif field.field_type == 'number' %}
+                <input type="number" name="{{ field.name }}" value="{{ value }}" class="form-control">
+            {% elif field.field_type == 'boolean' %}
+                <input type="checkbox" name="{{ field.name }}" {% if value %}checked{% endif %}>
+            {% elif field.field_type == 'image' %}
+                <input type="text" name="{{ field.name }}" value="{{ value }}" class="form-control">
+            {% endif %}
+        </div>
+    {% endfor %}
+    <button class="btn btn-primary">Speichern</button>
+</form>
+{% endblock %}

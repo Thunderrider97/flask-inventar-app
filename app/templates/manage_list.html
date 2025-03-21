@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ inv_list.name }} – Verwaltung</h2>
+
+<div class="mb-3 d-flex justify-content-between">
+  <a href="{{ url_for('inventory.add_item', list_id=inv_list.id) }}" class="btn btn-success">
+      ➕ Neuen Eintrag hinzufügen
+  </a>
+
+  <a href="{{ url_for('inventory.edit_list', list_id=inv_list.id) }}" class="btn btn-outline-secondary">
+      ✏️ Liste bearbeiten
+  </a>
+</div>
+
+{% if inv_list.items %}
+<table class="table table-bordered table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            {% for field in inv_list.fields %}
+                <th>{{ field.name }}</th>
+            {% endfor %}
+            <th style="width: 160px;">Aktion</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in inv_list.items %}
+            <tr>
+                {% for field in inv_list.fields %}
+                    <td>
+                        {% set value = item.data.get(field.name) %}
+                        {% if field.field_type == 'boolean' %}
+                            {% if value %}✅{% else %}❌{% endif %}
+                        {% elif field.field_type == 'image' %}
+                            {% if value %}
+                            <img src="{{ value }}" alt="Bild" style="max-width: 80px; max-height: 80px;">
+                            {% endif %}
+                        {% else %}
+                            {{ value }}
+                        {% endif %}
+                    </td>
+                {% endfor %}
+                <td>
+                    <a href="{{ url_for('inventory.edit_item', list_id=inv_list.id, item_id=item.id) }}"
+                       class="btn btn-sm btn-outline-primary">Bearbeiten</a>
+
+                    <form method="POST"
+                          action="{{ url_for('inventory.delete_item', list_id=inv_list.id, item_id=item.id) }}"
+                          style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Eintrag wirklich löschen?')">
+                            Löschen
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <p>❗️ Noch keine Einträge vorhanden.</p>
+{% endif %}
+
+{% endblock %}

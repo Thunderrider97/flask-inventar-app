@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Meine Inventarlisten</h2>
+
+<a href="{{ url_for('inventory.new_list') }}" class="btn btn-success mb-3">➕ Neue Inventarliste erstellen</a>
+
+{% if lists %}
+<table class="table table-bordered table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Name der Liste</th>
+            <th>Erstellt am</th>
+            <th>Aktion</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for list in lists %}
+        <tr>
+            <td>{{ list.name }}</td>
+            <td>{{ list.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+            <td>
+                <a href="{{ url_for('inventory.manage_list', list_id=list.id) }}" class="btn btn-sm btn-outline-primary">
+                    📋 Öffnen
+                </a>
+                <a href="{{ url_for('inventory.edit_list', list_id=list.id) }}" class="btn btn-sm btn-outline-secondary">
+                    ✏️ Bearbeiten
+                </a>
+                <form method="POST" action="{{ url_for('inventory.delete_list', list_id=list.id) }}" style="display:inline;">
+                  <button type="submit" class="btn btn-sm btn-outline-danger"
+                          onclick="return confirm('Diese Liste wirklich löschen?')">
+                      🗑 Löschen
+                  </button>
+              </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    <p>Du hast noch keine Inventarlisten erstellt.</p>
+{% endif %}
+{% endblock %}

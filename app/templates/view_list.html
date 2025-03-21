@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Liste: {{ inv_list.name }}</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Feldname</th>
+      <th>Typ</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for field in inv_list.fields %}
+      <tr>
+        <td>{{ field.name }}</td>
+        <td>{{ field.field_type }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

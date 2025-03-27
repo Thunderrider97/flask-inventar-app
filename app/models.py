@@ -6,10 +6,12 @@ from flask_login import LoginManager
 
 login_manager = LoginManager()
 
+#Lädt User Daten
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+#Definition User Tabelle
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
@@ -24,6 +26,7 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+#Definition Inventarlisten Tabelle
 class InventoryList(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
@@ -33,12 +36,14 @@ class InventoryList(db.Model):
     fields = db.relationship("InventoryField", backref="inventory_list", cascade="all, delete", lazy=True)
     items = db.relationship("InventoryItem", backref="inventory_list", cascade="all, delete", lazy=True)
 
+#Definition Inventarlistenfeld Tabelle
 class InventoryField(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     list_id = db.Column(db.Integer, db.ForeignKey("inventory_list.id"), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     field_type = db.Column(db.String(20), nullable=False)  # text, number, image, boolean
 
+#Definition Inventarlisteneintrag Tabelle
 class InventoryItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     list_id = db.Column(db.Integer, db.ForeignKey("inventory_list.id"), nullable=False)

@@ -6,11 +6,13 @@ from werkzeug.security import generate_password_hash
 
 bp = Blueprint('profile', __name__, url_prefix='/profile')
 
+#Eigenes User Profil anzeigen
 @bp.route("/")
 @login_required
 def show():
     return render_template("profile.html", user=current_user)
 
+#Eigenes User Profil bearbeiten
 @bp.route("/edit", methods=["POST"])
 @login_required
 def edit():

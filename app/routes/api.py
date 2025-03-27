@@ -4,6 +4,7 @@ from werkzeug.security import check_password_hash
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
+#Abruf von User erstellte Inventarlisten
 @bp.route("/list/<int:list_id>", methods=["GET"])
 def api_get_list(list_id):
     auth = request.authorization

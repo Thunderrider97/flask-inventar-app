@@ -5,38 +5,19 @@ from app import db
 
 bp = Blueprint('inventory', __name__, url_prefix='/inventory')
 
+#Definiert Hauptseite
 @bp.route("/")
 def home():
     return render_template("index.html")
 
+#Zeigt alle selbst erstellten Inventarlisten an
 @bp.route("/dashboard")
 @login_required
 def dashboard():
     lists = InventoryList.query.filter_by(user_id=current_user.id).all()
     return render_template("inventory_list.html", lists=lists)
 
-@bp.route("/new", methods=["GET", "POST"])
-@login_required
-def create():
-    if request.method == "POST":
-        list_name = request.form.get("list_name")
-        field_names = request.form.getlist("field_name[]")
-        field_types = request.form.getlist("field_type[]")
-
-        new_list = InventoryList(name=list_name, user_id=current_user.id)
-        db.session.add(new_list)
-        db.session.commit()
-
-        for name, ftype in zip(field_names, field_types):
-            field = InventoryField(name=name, field_type=ftype, list=new_list)
-            db.session.add(field)
-        db.session.commit()
-
-        flash("Liste erfolgreich erstellt!", "success")
-        return redirect(url_for("inventory.dashboard"))
-
-    return render_template("new_list.html")
-
+#Zeigt die gewählte Inventarliste im Lesemodus an
 @bp.route("/view/<int:list_id>")
 @login_required
 def view_list(list_id):
@@ -47,7 +28,7 @@ def view_list(list_id):
 
     return render_template("manage_list.html", inv_list=inv_list)
 
-
+#Erstellt eine neue Inventarliste
 @bp.route("/new_list", methods=["GET", "POST"])
 @login_required
 def new_list():
@@ -65,11 +46,12 @@ def new_list():
             db.session.add(field)
 
         db.session.commit()
-        flash("Liste erfolgreich erstellt!")
+        flash("Liste erfolgreich erstellt!", "success")
         return redirect(url_for("inventory.dashboard"))
 
     return render_template("new_list.html")
 
+#Zeigt Inventarliste im Bearbeitungsmodus an
 @bp.route("/manage/<int:list_id>")
 @login_required
 def manage_list(list_id):
@@ -80,6 +62,7 @@ def manage_list(list_id):
     
     return render_template("manage_list.html", inv_list=inv_list)
 
+#Neuen Eintrag im Inventarliste erstellen
 @bp.route("/manage/<int:list_id>/add", methods=["GET", "POST"])
 @login_required
 def add_item(list_id):
@@ -105,6 +88,7 @@ def add_item(list_id):
 
     return render_template("add_item.html", inv_list=inv_list)
 
+#Eintrag im Inventarliste bearbeiten
 @bp.route("/manage/<int:list_id>/edit/<int:item_id>", methods=["GET", "POST"])
 @login_required
 def edit_item(list_id, item_id):
@@ -128,6 +112,7 @@ def edit_item(list_id, item_id):
 
     return render_template("edit_item.html", inv_list=inv_list, item=item)
 
+#Eintrag in Inventarliste löschen
 @bp.route("/manage/<int:list_id>/delete/<int:item_id>", methods=["POST"])
 @login_required
 def delete_item(list_id, item_id):
@@ -143,6 +128,7 @@ def delete_item(list_id, item_id):
     flash("Eintrag gelöscht.", "info")
     return redirect(url_for("inventory.manage_list", list_id=list_id))
 
+#Inventarliste bearbeiten
 @bp.route("/edit/<int:list_id>", methods=["GET", "POST"])
 @login_required
 def edit_list(list_id):
@@ -176,6 +162,7 @@ def edit_list(list_id):
 
     return render_template("edit_list.html", inv_list=inv_list)
 
+#Inventarliste löschen
 @bp.route("/delete/<int:list_id>", methods=["POST"])
 @login_required
 def delete_list(list_id):

@@ -153,7 +153,7 @@ def edit_list(list_id):
         new_field_types = request.form.getlist("new_field_type[]")
         for name, ftype in zip(new_field_names, new_field_types):
             if name and ftype:
-                new_field = InventoryField(name=name, field_type=ftype, list=inv_list)
+                new_field = InventoryField(name=name, field_type=ftype, list_id=inv_list.id)
                 db.session.add(new_field)
 
         db.session.commit()

@@ -35,6 +35,7 @@ class InventoryList(db.Model):
 
     fields = db.relationship("InventoryField", backref="inventory_list", cascade="all, delete", lazy=True)
     items = db.relationship("InventoryItem", backref="inventory_list", cascade="all, delete", lazy=True)
+    
 
 #Definition Inventarlistenfeld Tabelle
 class InventoryField(db.Model):
